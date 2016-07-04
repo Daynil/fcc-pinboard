@@ -1,106 +1,125 @@
 'use strict';
 
-let gulp = require('gulp');
-let sourcemaps = require('gulp-sourcemaps');
-let tsc = require('gulp-typescript');
-let tsProject = tsc.createProject('tsconfig.json');
-let sass = require('gulp-sass');
-let nodemon = require('gulp-nodemon');
+const gulp = require('gulp');
+const sourcemaps = require('gulp-sourcemaps');
+const tsc = require('gulp-typescript');
+const tsProjectFront = tsc.createProject('tsconfig.json');
+const tsProjectBack = tsc.createProject('tsconfig.json');
+const sass = require('gulp-sass');
+const nodemon = require('gulp-nodemon');
 
-/** Development Builds **/
+/*========= Development Builds =========*/
 
-gulp.task('serve', ['compile-ts', 'compile-scss', 'copy-untransformed'], () => {
-  nodemon({script: './server/server.js'});
+gulp.task('serve', ['compile-ts', 'compile-scss', 'copy-untransformed', 'server-build'], () => {
+  nodemon({script: './server/build/server.js'});
   
   gulp.watch(
         ['./src/**/*.ts', 
          './src/**/*.scss', 
          './src/**/*.html', 
          './src/**/*.js' ], ['src-watch']);
+
+  gulp.watch(['./server/src/**/*.ts'], ['server-build']);
 });
 
 gulp.task('src-watch', ['compile-ts', 'compile-scss', 'copy-untransformed']);
 
-gulp.task('compile-scss', function() {
-  var sourceScssFiles = [
+gulp.task('compile-scss', () => {
+  let sourceScssFiles = [
     './src/**/*.scss'
   ];
   
-  var scssResult = gulp
+  let scssResult = gulp
     .src(sourceScssFiles)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError));
     
-  var stream = scssResult
+  let stream = scssResult
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'));
     
   return stream;
 });
 
-gulp.task('compile-ts', function() {
-  var sourceTsFiles = [
-    './src/**/*.ts',			// Path to typscript files
+gulp.task('compile-ts', () => {
+  let sourceTsFiles = [
+    './src/**/*.ts',			    // Path to typscript files
     './typings/index.d.ts' 		// Reference to typings so tsc knows where it is
   ];
   
-  var tsResult = gulp
+  let tsResult = gulp
     .src(sourceTsFiles)
     .pipe(sourcemaps.init())
-    .pipe(tsc(tsProject));
+    .pipe(tsc(tsProjectFront));
   
-  var stream = tsResult
+  let stream = tsResult
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'));
     
+  return stream;
+});
+
+gulp.task('server-build', () => {
+  let sourceTsFiles = [
+    './server/src/**/*.ts',
+    './typings/index.d.ts'
+  ];
+
+  let tsResult = gulp
+    .src(sourceTsFiles)
+    .pipe(tsc(tsProjectBack));
+
+  let stream = tsResult
+    .pipe(gulp.dest('./server/build'));
+
   return stream;
 });
 
 /** Copy untransformed files to destination folder */
-gulp.task('copy-untransformed', function() {
-  var sourceFiles = [
+gulp.task('copy-untransformed', () => {
+  let sourceFiles = [
     './src/**/*.html',
     './src/**/*.js',
     './src/**/*.css'
   ];
 
-  var stream = gulp
+  let stream = gulp
     .src(sourceFiles)
     .pipe(gulp.dest('./dist'));
 
   return stream;
 });
 
-/** Production Builds **/
+/*========= Production Builds =========*/
 
-gulp.task('build-production', ['compile-ts-prod', 'compile-scss-prod', 'copy-untransformed']);
+gulp.task('build-production', ['compile-ts-prod', 'compile-scss-prod', 'copy-untransformed', 'server-build']);
 
-gulp.task('compile-scss-prod', function() {
-  var sourceScssFiles = [
+gulp.task('compile-scss-prod', () => {
+  let sourceScssFiles = [
     './src/**/*.scss'
   ];
   
-  var scssResult = gulp
+  let scssResult = gulp
     .src(sourceScssFiles)
     .pipe(sass().on('error', sass.logError));
     
-  var stream = scssResult
+  let stream = scssResult
     .pipe(gulp.dest('./dist'));
     
   return stream;
 });
 
-gulp.task('compile-ts-prod', function() {
-  var sourceTsFiles = [
+gulp.task('compile-ts-prod', () => {
+  let sourceTsFiles = [
     './src/**/*.ts',			      // Path to typscript files
     './typings/index.d.ts'	  	// Reference to typings so tsc knows where it is
   ];
   
-  var tsResult = gulp
+  let tsResult = gulp
     .src(sourceTsFiles)
     .pipe(tsc(tsProject));
   
-  var stream = tsResult
+  let stream = tsResult
     .pipe(gulp.dest('./dist'));
     
   return stream;

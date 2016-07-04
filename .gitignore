@@ -13,3 +13,4 @@ typings
 
 # Don't add compiled files
 dist
+server/build

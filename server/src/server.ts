@@ -12,6 +12,16 @@ if (process.env.NODE_ENV !== 'production') {
 }
 let production = process.env.NODE_ENV === 'production';
 
+// OAuth login
+import session = require('express-session');
+import passport = require('passport');
+require('./passport')(passport);
+
+// Database
+import mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI);
+import { User, IUserModel } from './user';
+
 /** True = get response details on served node modules **/
 let verboseLogging = false;
 
@@ -33,6 +43,15 @@ app.use( express.static( path.join(__dirname, '../../dist') ));
 
 app.use('/scripts', express.static( path.join(__dirname, '../../node_modules') ));
 app.use('/app', express.static( path.join(__dirname, '../../dist/app') ));
+
+app.use(session({
+	secret: 'secretRandSessionPass',
+	resave: false,
+	saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/test', (req, res) => {
   res.status(200).end('Data received from server!');

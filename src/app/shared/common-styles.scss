@@ -1,0 +1,42 @@
+$primary-dark: #303F9F;
+$primary: #3F51B5;
+$primary-light: #C5CAE9;
+$accent: #E040FB;
+$text-dark: #212121;
+$text-light: #727272;
+$divider: #B6B6B6;
+
+.button {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid $primary;
+  color: $text-dark;
+  background-color: transparent;
+  transition: 0.3s;
+  &:hover {
+    cursor: pointer;
+    background-color: $primary;
+    color: aliceblue;
+  }
+}
+
+input {
+  border: 1px solid $text-dark;
+  outline: none;
+  padding: 10px;
+}
+
+#toast-wrap {
+  text-align: center;
+}
+
+.toast {
+  display: inline-block;
+	margin-top: 20px;
+	background-color: hsla(0, 0%, 0%, 0.6);
+	color: aliceblue;
+	font-style: 'Raleway';
+	padding: 10px;
+	border-radius: 10px;
+	transition: all 0.3s;
+}

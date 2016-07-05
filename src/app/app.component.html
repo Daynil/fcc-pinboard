@@ -1,3 +1,15 @@
-<h1>Hello Alice</h1>
-<cheshire-cat></cheshire-cat>
-<p>Server Data: {{ serverData }}</p>
+<div id="menu">
+  <div class="menu-item" id="logo">
+    <i class="fa fa-thumb-tack" aria-hidden="true"></i>
+    <span *ngIf="!creds.loggedIn">Pin Board</span>
+    <span *ngIf="creds.loggedIn">
+      {{ creds.user.username }}
+    </span>
+  </div>
+  <a [routerLink]="['/']"><div class="menu-item">All Pins</div></a>
+  <a [routerLink]="['/my-pins']"><div class="menu-item" *ngIf="creds.loggedIn">My Pins</div></a>
+  <a [routerLink]="['/add-pin']"><div *ngIf="creds.loggedIn" class="menu-item">Add Pin</div></a>
+  <a href="http://localhost:3000/auth/twitter"><div class="menu-item" *ngIf="!creds.loggedIn" (click)="login()">Log In</div></a>
+  <div class="menu-item" *ngIf="creds.loggedIn" (click)="logout()">Log Out</div>
+</div>
+<router-outlet></router-outlet>

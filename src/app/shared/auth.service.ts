@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import "rxjs/add/operator/toPromise";
 
@@ -12,7 +13,8 @@ export class AuthService {
   creds: Credentials = {loggedIn: false, user: null};
   logEvent = new EventEmitter<Credentials>();
 
-  constructor(private http: Http) { }
+  constructor(private http: Http,
+              private router: Router) { }
 
 	checkCreds() {
 		return this.http
@@ -20,14 +22,16 @@ export class AuthService {
               .toPromise()
               .then(parseJson)
               .then(res => {
+                console.log('chcked creds', res);
                 this.creds = res;
+                this.logEvent.emit(this.creds);
                 return this.creds;
               })
               .catch(handleError);
 	}
 
-  handleAuthLoggin() {
-
+  handleAuthLogging() {
+    //this.router.navigateByUrl('http://localhost:3000/auth/twitter');
   }
 
   logout() {

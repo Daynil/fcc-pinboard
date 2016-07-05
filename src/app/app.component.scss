@@ -1,3 +1,62 @@
-h1 {
-  color: red;
+@import './shared/common-styles';
+
+#menu {
+  display: flex;
+  background-color: $primary;
+  color: aliceblue;
+  font-family: 'Raleway';
+  min-width: 549px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+a {
+  color: aliceblue;
+  text-decoration: none;
+}
+
+#logo {
+  margin-right: auto;
+  i {
+    margin-right: 10px;
+  }
+  #settings {
+    margin-left: 10px;
+  }
+  &:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+.menu-item {
+  text-decoration: none;
+  font-size: 25px;
+  padding: 15px;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+@media all and (max-width: 768px) {
+  #menu {
+    flex-direction: column;
+    min-width: 300px;
+  }
+  #logo {
+    margin-right: 0;
+  }
+  .menu-item {
+    padding: 5px;
+    font-size: 20px;
+  }
+}
+
+#divider {
+  background-color: $divider;
+  height: 1px;
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 50px;
 }

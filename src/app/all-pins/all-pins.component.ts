@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   moduleId: module.id,
-  selector: 'cheshire-cat',
-  templateUrl: 'cheshire-cat.component.html',
-  styleUrls: ['cheshire-cat.component.css']
+  selector: 'all-pins',
+  templateUrl: 'all-pins.component.html',
+  styleUrls: ['all-pins.component.css']
 })
-export class CheshireCatComponent implements OnInit {
+export class AllPinsComponent implements OnInit {
   cheshireAscii = `
            .'/   /'.					
          .'.-.'-'.-.'.					

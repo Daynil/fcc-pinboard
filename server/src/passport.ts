@@ -11,18 +11,20 @@ module.exports = (passport) => {
   passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: 'https://daynil-fcc-nightlife.herokuapp.com/auth/twitter/callback'
+    callbackURL: 'http://localhost:3000/auth/twitter/callback'
   },
     (token, tokenSecret, profile, done) => {
       User.findOne({ 'twitterID': profile.id }, (err, user) => {
         if (err) return done(err);
         if (user) {
+          console.log('found existing user: ', user);
           return done(null, user);
         }
         else {
           let newUser = new User();
           newUser.twitterID = profile.id;
-
+          newUser.username = profile.username;
+          
           newUser.save( (err) => {
             if (err) throw err;
             return done(null, newUser);

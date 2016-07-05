@@ -1,5 +1,6 @@
 export interface User {
   twitterID: string;
+  username: string;
 }
 
 export interface Credentials {

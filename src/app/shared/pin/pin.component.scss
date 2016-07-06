@@ -1,16 +1,13 @@
-@import '../shared/common-styles.scss';
+@import '../common-styles';
 
-#add-pin {
-  text-align: center;
-  font-family: 'Raleway';
-}
-
-#preview-wrapper {
+#card {
   width: 200px;
   margin: 0 auto;
   padding-bottom: 10px;
   box-shadow: 0px 3px 10px 1px hsla(0, 0%, 0%, 0.29);
   border-radius: 2px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   text-align: center;
   img {
     width: 200px;
@@ -24,8 +21,10 @@
     max-height: 100px;
     overflow-y: hidden;
   }
-}
-
-.button {
-  margin-top: 30px;
+  i {
+    cursor: pointer;
+    &:active {
+      color: $accent;
+    }
+  }
 }

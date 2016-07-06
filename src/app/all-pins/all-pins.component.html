@@ -1,1 +1,7 @@
-<h1>All Pins!</h1>
+<div id="all-pins">
+  <h2>All Pins</h2>
+  <div id="pin-list">
+    <pin *ngFor="let pin of pinService.pins"
+          [pin]="pin"></pin>
+  </div>
+</div>

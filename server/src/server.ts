@@ -3,10 +3,11 @@ import path = require('path');
 import bodyParser = require('body-parser');
 import morgan = require('morgan');
 import compress = require('compression');
+import _ = require('lodash');
 
 const app = express();
 
-import { Credentials, User as IUser } from '../../src/app/shared/user.model';
+import { logError, mongoToObj } from './node-helpers';
 
 // Load local environment variables in development
 if (process.env.NODE_ENV !== 'production') {
@@ -22,7 +23,10 @@ require('./passport')(passport);
 // Database
 import mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URI);
-import { User, IUserModel } from './user';
+import { User as IUser } from '../../src/app/shared/user.model';
+import { User, IUserDoc } from './user';
+import { Pin as IPin } from '../../src/app/shared/pin.model';
+import { Pin, IPinDoc } from './pin';
 
 /** True = get response details on served node modules **/
 let verboseLogging = false;
@@ -55,13 +59,60 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.post('/api/pin', (req, res) => {
+	let pin: IPin = req.body;
+	let newPin = new Pin();
+	newPin.title = pin.title;
+	newPin.imageUrl = pin.imageUrl;
+	newPin.likes = pin.likes;
+	newPin.owner = pin.owner;
+	newPin.save(err => {
+		if (err) logError(res, 'Pin create error', err);
+		else res.status(200).json({message: 'Pin created'});
+	});
+});
+
+app.post('/api/like', (req, res) => {
+	let pin: IPin = req.body.pin;
+	let liker: string = req.body.liker
+	Pin
+		.findOne({ title: pin.title, 
+							 imageUrl: pin.imageUrl, 
+							 owner: pin.owner })
+		.exec()
+		.then((pinDoc: IPinDoc) => {
+			let alreadyLiked = _.find(pinDoc.likes, d => d === liker);
+			if (typeof alreadyLiked !== 'undefined') {
+				let likerIndex = pinDoc.likes.indexOf(alreadyLiked);
+				pinDoc.likes.splice(likerIndex, 1);
+			} else pinDoc.likes.push(liker);
+			pinDoc.save(err => {
+				if (err) logError(res, 'Pin save error', err);
+				else res.status(200).json({message: 'Pin saved'});
+			});
+		})
+});
+
+app.get('/api/allpins', (req, res) => {
+	Pin
+		.find({})
+		.exec()
+		.then((pinDocs: IPinDoc[]) => {
+			let pins = [];
+			pinDocs.forEach(pinDoc => {
+				pins.push(mongoToObj(pinDoc));
+			});
+			res.status(200).json(pins);
+		});
+});
+
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect: '/'}) );
 
 app.get('/auth/checkCreds', (req, res) => {
 	let twitterUser = req.user;
-	console.log(twitterUser);
+	
 	if (req.isAuthenticated()) {
 		let userInfo: IUser = {
 			twitterID: twitterUser.twitterID,

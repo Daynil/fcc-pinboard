@@ -4,6 +4,7 @@ import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 
 import { AuthService } from './shared/auth.service';
 import { Credentials, User } from './shared/user.model';
+import { PinService } from './shared/pin.service';
 
 @Component({
   moduleId: module.id,
@@ -11,13 +12,14 @@ import { Credentials, User } from './shared/user.model';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.css'],
   directives: [ROUTER_DIRECTIVES],
-  providers: [HTTP_PROVIDERS, AuthService]
+  providers: [HTTP_PROVIDERS, AuthService, PinService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
   
   creds: Credentials = {loggedIn: false, user: null};
   
   constructor(private authService: AuthService,
+              private pinService: PinService,
               private router: Router) {
     this.authService.logEvent.subscribe( (newCreds: Credentials) => {
       let curUser: User = newCreds.user ? newCreds.user : null;
@@ -31,15 +33,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.authService.checkCreds();
+    this.pinService.getAllPins();
   }
 
   ngAfterViewInit() {
-    console.log('got here!');
     this.authService.checkCreds();
-  }
-
-  login() {
-    this.authService.handleAuthLogging();
   }
 
   logout() {

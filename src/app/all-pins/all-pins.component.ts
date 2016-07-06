@@ -1,29 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 
+import { PinService } from '../shared/pin.service';
+import { PinComponent } from '../shared/pin/pin.component';
+
 @Component({
   moduleId: module.id,
   selector: 'all-pins',
   templateUrl: 'all-pins.component.html',
-  styleUrls: ['all-pins.component.css']
+  styleUrls: ['all-pins.component.css'],
+  directives: [PinComponent]
 })
 export class AllPinsComponent implements OnInit {
-  cheshireAscii = `
-           .'/   /'.					
-         .'.-.'-'.-.'.					
-    ..._:   .-. .-.   :_...				
-  .'    '-.(o ) (o ).-'    '.			
- :  _    _ _'~(_)~'_ _    _  :			
-:  /:   ' .-=_   _=-. '   ;/  :			
-:   :|-.._  '     '  _..-|:   :			
- :   ':| |':-:-.-:-:'| |:'   :			
-  '.   '.| | | | | | |.'   .'			
-    '.   '-:_| | |_:-'   .'				
-      '-._   ''''    _.-'				
-          ''-------''					
-  `;
 
-  constructor() { }
+  constructor(private pinService: PinService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.pinService.pins);
+  }
 
 }

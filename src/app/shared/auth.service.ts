@@ -30,14 +30,11 @@ export class AuthService {
               .catch(handleError);
 	}
 
-  handleAuthLogging() {
-    //this.router.navigateByUrl('http://localhost:3000/auth/twitter');
-  }
-
   logout() {
     return this.http
               .get('/auth/logout')
               .toPromise()
+              .then(parseJson)
               .then(res => {
                 this.creds = {loggedIn: false, user: null};
                 this.logEvent.emit(this.creds);

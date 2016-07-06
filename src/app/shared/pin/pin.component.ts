@@ -1,18 +1,19 @@
-import { Component, ElementRef, 
+import { Component, ElementRef, Input, 
          AfterViewInit, ViewChild } from '@angular/core';
 
-import { Dimens } from '../shared/dimens.model';
-import { PinService } from '../shared/pin.service';
-import { ToastComponent } from '../shared/toast.component';
+import { Dimens } from '../dimens.model';
+import { Pin } from '../pin.model';
+import { PinService } from '../pin.service';
 
 @Component({
   moduleId: module.id,
-  selector: 'add-pin',
-  templateUrl: 'add-pin.component.html',
-  styleUrls: ['add-pin.component.css'],
-  directives: [ToastComponent]
+  selector: 'pin',
+  templateUrl: 'pin.component.html',
+  styleUrls: ['pin.component.css']
 })
-export class AddPinComponent implements AfterViewInit {
+export class PinComponent implements AfterViewInit {
+
+  @Input() pin: Pin;
 
   @ViewChild('wrapper') cardWrapper: ElementRef;
   @ViewChild('image') image: ElementRef;
@@ -24,25 +25,22 @@ export class AddPinComponent implements AfterViewInit {
   wrapperWidth = '200px';
   imageWidth = '200px';
 
-  toast = '';
-  
   constructor(private pinService: PinService) { }
 
   ngAfterViewInit() {
     this.nativeImage = this.image.nativeElement;
+    this.setDimens(this.pin.imageUrl);
   }
 
   setDimens(imageUrl: string) {
     let imageDimens = new Promise((resolve, reject) => {
       this.nativeImage.addEventListener('load', () => {
-        console.log('image loaded?');
         resolve({
           width: this.image.nativeElement.naturalWidth,
           height: this.image.nativeElement.naturalHeight
         });
       });
       this.nativeImage.addEventListener('error', () => {
-        console.log('image load error');
         resolve({width: null, height: null});
       });
     });
@@ -61,22 +59,13 @@ export class AddPinComponent implements AfterViewInit {
       } else {
         this.wrapperWidth = this.maxWidth + 'px';
         this.imageWidth = this.maxWidth + 'px';
+        console.log('changed width: ', this.imageWidth);
       }
     });
   }
 
-  submitPin(title: HTMLInputElement, imageIn: HTMLInputElement) {
-    let titleTxt = title.value;
-    let imageTxt = imageIn.value;
-    if (titleTxt.length < 1 || imageTxt.length < 1) return;
-    this.pinService
-        .submitPin(titleTxt, imageTxt)
-        .then(res => {
-          title.value = '';
-          imageIn.value = '';
-          this.toast = 'Pin added!';
-          this.nativeImage.src = '';
-        });
+  like() {
+    this.pinService.likePin(this.pin);
   }
-  
+
 }

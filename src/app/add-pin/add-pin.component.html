@@ -1,1 +1,16 @@
-<h1>Pin addage!</h1>
+<div id="add-pin">
+  <h3>Title</h3>
+  <input type="text" #title (keyup)="0">
+  <h3>Image Url</h3>
+  <input type="text" #imageIn (input)="setDimens(imageIn.value)">
+  <div id="image-preview">
+    <h3>Pin Preview</h3>
+    <div id="preview-wrapper" [style.width]="wrapperWidth" #wrapper>
+      <img src="" [style.width]="imageWidth" #image>
+      <span id="title">{{ title.value }}</span>
+      <span id="likes"><i class="fa fa-heart" aria-hidden="true"></i> 1</span>
+    </div>
+  </div>
+  <div class="button" (click)="submitPin(title, imageIn)">Submit</div>
+  <toast [message]="toast"></toast>
+</div>

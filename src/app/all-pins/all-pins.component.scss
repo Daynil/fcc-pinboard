@@ -1,5 +1,13 @@
-div {
-  color: hotpink;
-  white-space: pre-wrap;
-  font-family: monospace;
+#all-pins {
+  font-family: 'Raleway';
+  text-align: center;
+}
+
+#pin-list {
+  display: flex;
+  width: 70%;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 20px;
 }

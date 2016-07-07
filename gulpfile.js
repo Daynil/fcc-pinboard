@@ -117,7 +117,7 @@ gulp.task('compile-ts-prod', () => {
   
   let tsResult = gulp
     .src(sourceTsFiles)
-    .pipe(tsc(tsProject));
+    .pipe(tsc(tsProjectFront));
   
   let stream = tsResult
     .pipe(gulp.dest('./dist'));

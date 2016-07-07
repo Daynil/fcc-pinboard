@@ -72,6 +72,17 @@ app.post('/api/pin', (req, res) => {
 	});
 });
 
+app.post('/api/deletepin', (req, res) => {
+	let pin: IPin = req.body;
+	Pin
+		.remove({ title: pin.title, 
+							imageUrl: pin.imageUrl, 
+							owner: pin.owner }, err => {
+			if (err) logError(res, 'Pin remove error', err);
+			else res.status(200).json({message: 'Pin deleted'});
+		});
+});
+
 app.post('/api/like', (req, res) => {
 	let pin: IPin = req.body.pin;
 	let liker: string = req.body.liker
@@ -124,7 +135,7 @@ app.get('/auth/checkCreds', (req, res) => {
 
 app.get('/auth/logout', (req, res) => {
 	req.logout();
-	res.end();
+	res.json({message: 'logged out'});
 });
 
 /** Pass all non-api routes to front-end router for handling **/ 

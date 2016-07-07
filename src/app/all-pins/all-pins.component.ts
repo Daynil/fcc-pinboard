@@ -14,8 +14,6 @@ export class AllPinsComponent implements OnInit {
 
   constructor(private pinService: PinService) { }
 
-  ngOnInit() {
-    console.log(this.pinService.pins);
-  }
+  ngOnInit() { }
 
 }

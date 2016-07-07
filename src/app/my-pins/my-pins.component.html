@@ -1,1 +1,9 @@
-<h1>My Pins!</h1>
+<div id="my-pins">
+  <h2>My Pins</h2>
+  <div id="pin-list">
+    <div class="pin-wrapper" *ngFor="let pin of pinService.userPins">
+      <i class="fa fa-trash" aria-hidden="true" (click)="deletePin(pin)"></i>
+      <pin [pin]="pin"></pin>
+    </div>
+  </div>
+</div>

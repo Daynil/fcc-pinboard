@@ -14,9 +14,14 @@ import { AuthService } from './auth.service';
 export class PinService {
 
   pins: Pin[] = [];
+  userPins: Pin[] = [];
 
   constructor(private http: Http,
-              private authService: AuthService) { }
+              private authService: AuthService) {
+    this.authService.logEvent.subscribe(logged => {
+      this.refreshUserPins();
+    });
+  }
 
   submitPin(title: string, url: string) {
     let user = this.authService.creds.user.username;
@@ -27,6 +32,7 @@ export class PinService {
       owner: user
     };
     this.pins.push(pin);
+    this.refreshUserPins();
     let pkg = packageForPost(pin);
     return this.http
               .post('/api/pin', pkg.body, pkg.opts)
@@ -34,6 +40,18 @@ export class PinService {
               .then(parseJson)
               .catch(handleError);
   }
+
+  deletePin(pin: Pin) {
+    this.pins.splice(this.pins.indexOf(pin), 1);
+    this.refreshUserPins();
+    let pkg = packageForPost(pin);
+    return this.http
+              .post('/api/deletepin', pkg.body, pkg.opts)
+              .toPromise()
+              .then(parseJson)
+              .catch(handleError);
+  }
+
 
   likePin(pin: Pin) {
     if (!this.authService.creds.loggedIn) {
@@ -53,6 +71,7 @@ export class PinService {
     } else {
       likedPin.likes.push(user);
     }
+    this.refreshUserPins();
     let pkg = packageForPost(data);
     return this.http
               .post('/api/like', pkg.body, pkg.opts)
@@ -68,9 +87,15 @@ export class PinService {
               .then(parseJson)
               .then((pins: Pin[]) => {
                 this.pins = pins;
+                this.refreshUserPins();
                 return pins;
               })
               .catch(handleError);
+  }
+
+  refreshUserPins() {
+    if (!this.authService.creds.loggedIn) return;
+    this.userPins = _.filter(this.pins, d => d.owner === this.authService.creds.user.username);
   }
 
 }

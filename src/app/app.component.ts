@@ -22,11 +22,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private pinService: PinService,
               private router: Router) {
     this.authService.logEvent.subscribe( (newCreds: Credentials) => {
-      let curUser: User = newCreds.user ? newCreds.user : null;
-      this.creds = {
-        loggedIn: newCreds.loggedIn,
-        user: curUser
-      }
+      this.creds = newCreds;
+      console.log('creds after log event', this.creds);
       if (!this.creds.loggedIn) this.router.navigate(['']);
     });
   }
@@ -41,7 +38,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService
+        .logout()
+        .then(res => this.router.navigate(['']));
   }
 
 }

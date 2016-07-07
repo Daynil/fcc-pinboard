@@ -24,6 +24,8 @@ export class AddPinComponent implements AfterViewInit {
   wrapperWidth = '200px';
   imageWidth = '200px';
 
+  brokenImagePlaceholder = 'https://res.cloudinary.com/dz9rf4hwz/image/upload/v1467920003/placeholder_pw4fxp_gg4pjd.gif';
+
   toast = '';
   
   constructor(private pinService: PinService) { }
@@ -35,14 +37,13 @@ export class AddPinComponent implements AfterViewInit {
   setDimens(imageUrl: string) {
     let imageDimens = new Promise((resolve, reject) => {
       this.nativeImage.addEventListener('load', () => {
-        console.log('image loaded?');
         resolve({
           width: this.image.nativeElement.naturalWidth,
           height: this.image.nativeElement.naturalHeight
         });
       });
       this.nativeImage.addEventListener('error', () => {
-        console.log('image load error');
+        this.nativeImage.src = this.brokenImagePlaceholder;
         resolve({width: null, height: null});
       });
     });

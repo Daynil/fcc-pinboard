@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'attribution',
   template: `
     <div id="wrap">
-      <a id="gh-link" href="https://github.com/Daynil/fcc-trading">
+      <a id="gh-link" href="https://github.com/Daynil/fcc-pinboard">
         <i class="fa fa-github-square fa-lg"></i>
       </a>
       <div id="text">

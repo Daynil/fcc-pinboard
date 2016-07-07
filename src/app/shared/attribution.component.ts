@@ -33,13 +33,13 @@ import { Component } from '@angular/core';
     }
 
     #wrap i, #wrap a {
-      color: #00BCD4;
-      transition: 0.3s;
+      color: #3F51B5;
+      transition: 0.2s;
       text-decoration: none;
     }
 
     #wrap a:hover, #gh-link:hover i {
-      color: #B3E5FC;
+      color: #C5CAE9;
       text-decoration: none;
     }
 

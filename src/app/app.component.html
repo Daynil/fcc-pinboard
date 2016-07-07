@@ -9,7 +9,9 @@
   <a [routerLink]="['/']"><div class="menu-item">All Pins</div></a>
   <a [routerLink]="['/my-pins']"><div class="menu-item" *ngIf="creds.loggedIn">My Pins</div></a>
   <a [routerLink]="['/add-pin']"><div class="menu-item" *ngIf="creds.loggedIn">Add Pin</div></a>
-  <a href="http://localhost:3000/auth/twitter"><div class="menu-item" *ngIf="!creds.loggedIn">Log In</div></a>
+  <a href="https://daynil-pinboard.herokuapp.com/auth/twitter"><div class="menu-item" *ngIf="!creds.loggedIn">Log In</div></a>
   <div class="menu-item" *ngIf="creds.loggedIn" (click)="logout()">Log Out</div>
 </div>
 <router-outlet></router-outlet>
+<div id="divider"></div>
+<attribution></attribution>
